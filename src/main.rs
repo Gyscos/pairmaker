@@ -28,13 +28,18 @@ fn main() {
                                .takes_value(true))
                       .get_matches();
 
-    let names: Vec<_> = matches.values_of("NAMES").unwrap().collect();
+    let mut names: Vec<_> = matches.values_of("NAMES").unwrap().collect();
+    if names.len() % 2 == 1 {
+        // For odd numbers, pair one guy with no-one each turn
+        names.push("?");
+    }
 
     let n = matches.value_of("N")
                    .map(|s| usize::from_str(s).expect("invalid number"))
                    .unwrap_or(names.len() - 1);
 
     let mirror = matches.is_present("MIRROR");
+
 
     // This iterator will return the pairs of names
     let iter = (0..n).map(|i| {
